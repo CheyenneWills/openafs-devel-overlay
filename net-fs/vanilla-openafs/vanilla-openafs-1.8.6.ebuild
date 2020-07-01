@@ -3,22 +3,25 @@
 
 EAPI=7
 
-inherit autotools linux-mod flag-o-matic pam systemd toolchain-funcs git-r3
+inherit autotools linux-mod flag-o-matic pam systemd toolchain-funcs
 
 MY_PV=${PV/_/}
-MY_P="${PN}-${MY_PV}"
-
+MY_P="${PN#vanilla-}-${MY_PV}"
+PVER=20190106
 KERNEL_LIMIT=4.21
 
 DESCRIPTION="The OpenAFS distributed file system - Vanilla"
 HOMEPAGE="https://www.openafs.org/"
-
-EGIT_REPO_URI="https://git.openafs.org/openafs.git"
-EGIT_BRANCH="master"
+# We always d/l the doc tarball as man pages are not USE=doc material
+[[ ${PV} == *_pre* ]] && MY_PRE="candidate/" || MY_PRE=""
+SRC_URI="
+        https://openafs.org/dl/openafs/${MY_PRE}${MY_PV}/${MY_P}-src.tar.bz2
+        https://openafs.org/dl/openafs/${MY_PRE}${MY_PV}/${MY_P}-doc.tar.bz2
+"
 
 LICENSE="IBM BSD openafs-krb5-a APSL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 ~sparc ~x86 ~amd64-linux ~x86-linux"
 
 IUSE="api bitmap-later debug doc fuse kauth kerberos +modules +namei
 ncurses perl +pthreaded-ubik +supergroups tsm ubik-read-while-write"
@@ -91,7 +94,6 @@ src_prepare() {
 
         # packaging is f-ed up, so we can't run eautoreconf
         # run autotools commands based on what is listed in regen.sh
-        _elibtoolize --install --force --copy
         eaclocal -I src/cf -I src/external/rra-c-util/m4
         eautoconf
         eautoconf -o configure-libafs configure-libafs.ac
@@ -147,9 +149,6 @@ src_configure() {
 }
 
 src_compile() {
-        perl doc/man-pages/merge-pod doc/man-pages/pod*/*.in
-        (cd doc/man-pages && ./generate-man)
-
         ARCH="$(tc-arch-kernel)" AR="$(tc-getAR)" emake V=1
         local d
         if use doc; then
