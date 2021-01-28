@@ -3,22 +3,36 @@
 
 EAPI=7
 
-inherit autotools linux-mod flag-o-matic pam systemd toolchain-funcs git-r3
+inherit autotools linux-mod flag-o-matic pam systemd toolchain-funcs
 
 MY_PV=${PV/_/}
-MY_P="${PN}-${MY_PV}"
 
-KERNEL_LIMIT=4.21
+KERNEL_LIMIT=5.10
 
 DESCRIPTION="The OpenAFS distributed file system - Vanilla"
 HOMEPAGE="https://www.openafs.org/"
 
-EGIT_REPO_URI="https://git.openafs.org/openafs.git"
-EGIT_BRANCH="master"
+if [[ ${PV} == "9999" ]] ; then 
+   MY_P="${PN}-${MY_PV}"
+   EGIT_REPO_URI="https://git.openafs.org/openafs.git"
+   EGIT_BRANCH="master"
+   inherit git-r3
+   KERNEL_LIMIT=5.11
+   KEYWORDS=""
+else
+   MY_P="${PN#vanilla-}-${MY_PV}"
+   # We always d/l the doc tarball as man pages are not USE=doc material
+   [[ ${PV} == *_pre* ]] && MY_PRE="candidate/" || MY_PRE=""
+   SRC_URI="
+        https://openafs.org/dl/openafs/${MY_PRE}${MY_PV}/${MY_P}-src.tar.bz2
+        https://openafs.org/dl/openafs/${MY_PRE}${MY_PV}/${MY_P}-doc.tar.bz2
+   "
+   KEYWORDS="amd64 ~sparc ~x86 ~amd64-linux ~x86-linux"
+fi
+
 
 LICENSE="IBM BSD openafs-krb5-a APSL-2"
 SLOT="0"
-KEYWORDS=""
 
 IUSE="api bitmap-later debug doc fuse kauth kerberos +modules +namei
 ncurses perl +pthreaded-ubik +supergroups tsm ubik-read-while-write"
