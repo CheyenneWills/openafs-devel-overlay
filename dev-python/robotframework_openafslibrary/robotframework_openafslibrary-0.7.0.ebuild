@@ -1,6 +1,7 @@
 # Distributed under the terms of the BSD License
 
 EAPI=7
+_PYTHON_ALLOW_PY27=1
 PYTHON_COMPAT=( python2_7 )
 
 inherit distutils-r1
