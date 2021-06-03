@@ -1,7 +1,7 @@
 # Distributed under the terms of the BSD License
 
 EAPI=7
-PYTHON_COMPAT=( python2_7 python3_{4,5,6,7} )
+PYTHON_COMPAT=( python2_7 python3_{4,5,6,7,8,9} )
 
 inherit distutils-r1
 
