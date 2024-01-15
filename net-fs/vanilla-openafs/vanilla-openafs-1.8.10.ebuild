@@ -37,7 +37,6 @@ ncurses perl +pthreaded-ubik +supergroups tsm ubik-read-while-write"
 BDEPEND="
         dev-lang/perl
         sys-devel/flex
-        virtual/yacc
         api? (
                 app-doc/doxygen
                 media-gfx/graphviz
