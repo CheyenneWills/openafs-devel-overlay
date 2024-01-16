@@ -10,7 +10,7 @@ inherit distutils-r1 pypi
 DESCRIPTION="Gerrit review system command line tools."
 HOMEPAGE="https://github.com/meffie/git-gerrit https://pypi.org/project/git-gerrit/"
 SRC_URI="$(pypi_sdist_url "${PN^}" "${PV}")"
-S=${WORKDIR}/${P^}
+S=${WORKDIR}/git_gerrit-{${PV}
 
 LICENSE="BSD"
 SLOT="0"
